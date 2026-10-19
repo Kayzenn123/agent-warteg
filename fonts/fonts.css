@@ -1,0 +1,26 @@
+/* Self-hosted fonts — 30 Days of Code Hari 10 (WARTEG) */
+/* Variable fonts expose the wght axis; font-display: swap for all. */
+
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./roboto-slab-wght.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Ojuju';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('./ojuju-wght.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Henny Penny';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('./henny-penny-400.woff2') format('woff2');
+}

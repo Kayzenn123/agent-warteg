@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WARTEG — Koran Lauk Harian: 18 Lauk, Hitung Piring, Patungan</title>
+<meta name="description" content="Koran menu warung tegal interaktif: 18 lauk nyata + harga Rp, pilih lauk, hitung total, patungan split bill, unduh/salin struk. Semua di browser, tanpa akun.">
+<link rel="canonical" href="https://kayzenn123.github.io/agent-warteg/">
+<meta name="theme-color" content="#221809">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WARTEG — Koran Lauk Harian">
+<meta property="og:description" content="Berita bahagia tiap hari — makan enak, dompet tetep aman. 18 lauk, hitung piring, patungan rame-rame.">
+<meta property="og:url" content="https://kayzenn123.github.io/agent-warteg/">
+<meta property="og:image" content="https://kayzenn123.github.io/agent-warteg/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/roboto-slab-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ojuju-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#etalase">Lompat ke etalase lauk</a>
+
+<!-- Boot overlay: koran sedang dicetak -->
+<div class="boot" id="boot" role="status">
+  <svg class="boot-piring" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-plate"/></svg>
+  <p>mencetak koran…</p>
+</div>
+
+<!-- Band marquee vertikal di sisi layar (B) -->
+<div class="bandband" aria-hidden="true">
+  <div class="band band-kiri"><div class="band-track" id="bandKiri"></div></div>
+  <div class="band band-kanan"><div class="band-track" id="bandKanan"></div></div>
+</div>
+
+<header class="masthead" data-pl="1" role="banner">
+  <p class="kicker">Warkop “Warteg Berita Bahagia” · Koran Lauk Harian · Terbit tiap pagi</p>
+  <div class="masthead-row">
+    <p class="masthead-meta">Edisi<br><strong>2026-10-19</strong></p>
+    <h1 class="masthead-title" id="judulUtama">WARTEG</h1>
+    <p class="masthead-meta">Total piring<br><strong id="hargaEceran">Rp0</strong></p>
+  </div>
+  <p class="tagline">Berita bahagia tiap hari — makan enak, dompet tetep aman.</p>
+  <svg class="rule rule-masthead" viewBox="0 0 600 10" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="2" y1="5" x2="598" y2="5" class="rule-line"/>
+  </svg>
+</header>
+
+<main id="main">
+  <section class="hero" data-pl="2" aria-labelledby="heroJudul">
+    <h2 class="hero-judul" id="heroJudul">Koran Lauk Hari Ini: Panas, Lengkap, Siap Disendok!</h2>
+    <p class="hero-sub">Semua lauk di etalase udah ready, Mas. Pilih sesukamu, tambah sesukamu — nanti totalnya dihitungin sampe ke rupiah terakhir.</p>
+  </section>
+
+  <section class="toolbar" data-pl="2" aria-label="Cari dan saring lauk">
+    <label class="cari">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-search"/></svg>
+      <span class="sr">Cari lauk</span>
+      <input type="search" id="q" placeholder="Cari lauk… (misal: lele, jengkol, sayur asem)" autocomplete="off" aria-label="Cari lauk">
+    </label>
+    <div class="chips" role="group" aria-labelledby="chipsLabel">
+      <span class="chips-label" id="chipsLabel">Saring kategori:</span>
+      <div class="chips-row" id="chipsRow"></div>
+    </div>
+    <button class="btn btn-ger" id="gerakToggle" aria-pressed="true">Gerak: nyala</button>
+    <button class="band-jeda" id="bandJeda" aria-pressed="false" aria-label="Jeda pita berjalan">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-pause"/></svg>
+      <span>Jeda pita</span>
+    </button>
+    <p class="toolbar-hint" id="hitungLauk" role="status">Menyiapkan etalase…</p>
+  </section>
+
+  <section class="etalase" id="etalase" aria-labelledby="etalaseJudul">
+    <h2 class="sr" id="etalaseJudul">Edisi Pagi — Daftar Lauk</h2>
+    <p class="rubrik-kicker" data-pl="2">Edisi Pagi — Daftar Lauk</p>
+    <div id="rubrikList"></div>
+    <div class="cari-kosong" id="cariKosong" hidden>
+      <svg class="icon icon-besar" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-search"/></svg>
+      <p class="kosong-judul" id="cariKosongTeks"></p>
+      <p>Coba kata lain — atau <button class="linklike" id="resetCari">tampilkan semua lauk</button>.</p>
+    </div>
+  </section>
+
+  <section class="piring" id="piring" data-pl="4" aria-labelledby="piringJudul">
+    <div class="seksi-head">
+      <h2 class="seksi-judul" id="piringJudul">Piringmu</h2>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-plate"/></svg>
+    </div>
+    <svg class="rule" viewBox="0 0 600 10" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="2" y1="5" x2="598" y2="5" class="rule-line"/>
+    </svg>
+    <div class="piring-kosong" id="piringKosong">
+      <p class="kosong-judul">Piringmu masih kosong, Mas.</p>
+      <p>Ayo comot lauk dari etalase — yang anget-anget nungguin tuh.</p>
+    </div>
+    <ul class="piring-list" id="piringList" hidden></ul>
+    <div class="piring-bar" id="piringBar" hidden>
+      <p class="piring-total">Total piring: <strong id="piringTotal">Rp0</strong></p>
+      <button class="btn" id="kosongkanAtas">Kosongkan</button>
+    </div>
+    <p class="piring-loading" id="piringLoading" role="status" hidden>Sebentar ya, Mas — lagi dihitung…</p>
+  </section>
+
+  <section class="kalkulator" id="kalkulator" data-pl="4" aria-labelledby="kalkJudul">
+    <div class="seksi-head">
+      <h2 class="seksi-judul" id="kalkJudul">Kalkulator Piring <span class="h-sub">(hitung biar pas)</span></h2>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-calculator"/></svg>
+    </div>
+    <svg class="rule" viewBox="0 0 600 10" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="2" y1="5" x2="598" y2="5" class="rule-line"/>
+    </svg>
+    <div class="kalk-grid">
+      <p class="kalk-total">Total yang dibagi: <strong id="kalkTotal">Rp0</strong></p>
+      <label class="kalk-orang">
+        <span>Bagi rata ke berapa orang?</span>
+        <input type="number" id="jmlOrang" min="2" max="50" value="2" inputmode="numeric" aria-describedby="orangHint">
+      </label>
+      <fieldset class="kalk-bulat">
+        <legend>Pembulatan</legend>
+        <label class="radio"><input type="radio" name="bulat" value="pas" checked> <span>Pas</span></label>
+        <label class="radio"><input type="radio" name="bulat" value="naik"> <span>Ke atas Rp1.000</span></label>
+      </fieldset>
+      <p class="kalk-hasil" id="kalkHasil" role="status"></p>
+      <p class="kalk-hint" id="orangHint">Minimal 2 orang. Sendirian mah namanya traktir diri sendiri.</p>
+      <button class="btn" id="salinRingkasan">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-copy"/></svg>
+        Salin ringkasan
+      </button>
+    </div>
+  </section>
+
+  <section class="struk-seksi" id="struk" data-pl="4" aria-labelledby="strukJudul">
+    <div class="seksi-head">
+      <h2 class="seksi-judul" id="strukJudul">Struk Belanja <span class="h-sub">— Simpen Buat Kenangan</span></h2>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-receipt-text"/></svg>
+    </div>
+    <svg class="rule" viewBox="0 0 600 10" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="2" y1="5" x2="598" y2="5" class="rule-line"/>
+    </svg>
+    <div class="struk-kertas" id="strukKertas">
+      <div class="cap-stempel" id="capKenyang" hidden aria-hidden="true"><span>KENYANG<br>MAKSIMAL</span></div>
+      <svg class="struk-tear" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true">
+        <use href="icons.svg#i-receipt-tear" width="300" height="14"/>
+      </svg>
+      <p class="struk-head">★ WARTEG BERITA BAHAGIA ★</p>
+      <p class="struk-sub">Bukti makan enak, bukan bukti utang.</p>
+      <div class="struk-rule" aria-hidden="true"></div>
+      <ul class="struk-list" id="strukList"></ul>
+      <div class="struk-rule" aria-hidden="true"></div>
+      <p class="struk-total">TOTAL <strong id="strukTotal">Rp0</strong></p>
+      <p class="struk-patu" id="strukPatungan"></p>
+      <p class="struk-waktu" id="strukWaktu"></p>
+      <p class="struk-foot">Makasih udah mampir! Perut kenyang, hati senang. — Mas Warteg</p>
+    </div>
+    <div class="struk-aksi">
+      <button class="btn btn-primer" id="unduhJson">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-download"/></svg>
+        Unduh JSON
+      </button>
+      <button class="btn" id="salinTeks">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-copy"/></svg>
+        Salin teks
+      </button>
+      <button class="btn" id="bagikan">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-newspaper"/></svg>
+        Bagikan piring
+      </button>
+      <button class="btn btn-bahaya" id="kosongkan">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons.svg#i-x"/></svg>
+        Kosongkan
+      </button>
+    </div>
+  </section>
+</main>
+
+<footer class="kolofon" data-pl="5">
+  <svg class="rule" viewBox="0 0 600 10" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="2" y1="5" x2="598" y2="5" class="rule-line"/>
+  </svg>
+  <p class="disclaimer"><strong>Harga patokan</strong> menu warteg Jakarta 2025–2026 — tiap warteg bisa beda dikit, Bos.</p>
+  <p class="kolofon-isi">Dicetak dengan cinta (dan minyak goreng) di Warteg Berita Bahagia · Edisi Hari ke-10 · Harga bisa berubah, rasa tetep juara.</p>
+  <p class="easter-hint">Psst… ada yang disembunyiin di koran ini. Coba ketik sesuatu yang bikin perut bahagia.</p>
+  <p class="kolofon-kecil">30 Days of Code · Hari 10/30 · Koran Lauk Harian · Tanpa gambar, murni tipografi.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="motion.js"></script>
+</body>
+</html>
